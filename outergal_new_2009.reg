@@ -1,0 +1,10 @@
+# Region file format: DS9 version 4.1
+# Filename: v2.0_ds2_orion_b_2_13pca_map20.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+galactic
+box(+211:47:07.711,-19:20:01.685,10794",4051.47",358.894)
+box(+213:06:16.794,-18:38:08.926,3782.66",3132.01",115.141)
+box(+213:39:27.356,-19:50:14.446,6312.25",3730.32",11.43)
+box(+206:45:21.854,-16:11:41.107,8423.44",8617.11",31.9601)
+box(+204:00:59.704,-11:51:00.933,7466.44",4702.04",334.454)
+box(+205:25:35.509,-14:09:33.461,5913.78",10325.7",312.266)
