@@ -9,6 +9,7 @@ from agpy.get_cutouts import coords_in_image
 import glob
 import numpy as np
 import os
+import itertools
 
 regfile = pyregion.open('crop_regions.reg'); temp=False
 #regfile = pyregion.open('temp.reg'); temp=True
@@ -52,6 +53,7 @@ def reg_to_header(rectreg,cdelt=7.2/3600.):
 
 headerlist = [reg_to_header(reg) for reg in regfile]
 regname = [reg.attr[1]['text'] for reg in regfile]
+hdrdict = dict(zip(regname,headerlist))
 
 filelist = glob.glob("v2.0_ds2*_map20.fits")
 filelist += glob.glob("v2.0_ds2*_medmap20.fits")
@@ -87,10 +89,18 @@ for fn in filelist:
 
                 #glonx = fits[0].header.get('CRVAL1') + (fits[0].header.get('CRPIX1')+np.arange(fits[0].header.get('NAXIS1'))+1)*fits[0].header.get('CD1_1')
                 wcs = pywcs.WCS(header)
-                glonmin,glatmin = wcs.wcs_pix2sky(1,1,1)
-                glonmax,glatmax = wcs.wcs_pix2sky(wcs.naxis1,wcs.naxis2,1)
-                if glonmin > glonmax: glonmin,glonmax=glonmax,glonmin
-                if glatmin > glatmax: glatmin,glatmax=glatmax,glatmin
+                glonmin,glatmin = np.inf,np.inf
+                glonmax,glatmax = -np.inf,-np.inf
+                for x,y in itertools.product((1,wcs.naxis1),(1,wcs.naxis2)):
+                    a,b = wcs.wcs_pix2sky(x,y,1)
+                    if a < glonmin:
+                        glonmin = a
+                    if b < glatmin:
+                        glatmin = b
+                    if a > glonmax:
+                        glonmax = a
+                    if b > glatmax:
+                        glatmax = b
                 if not temp: print >>bounds,"%45s %15g %15g %15g %15g" % (fn,glonmin,glonmax,glatmin,glatmax)
                 if not temp: bounds.flush()
             except montage.status.MontageError:
